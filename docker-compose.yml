@@ -1,0 +1,12 @@
+services:
+  hytale-server:
+    build: .
+    image: ghcr.io/quantumsheep/hytale-docker:latest
+    container_name: hytale_server
+    ports:
+      - "5520:5520/udp"
+    volumes:
+      - ./data:/hytale
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
