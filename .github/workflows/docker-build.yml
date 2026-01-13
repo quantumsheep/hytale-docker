@@ -1,0 +1,58 @@
+name: Build Hytale Docker
+
+on:
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Log in to the Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
+            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --label "org.opencontainers.image.description=Hytale server in a Docker container" \
+            --label "org.opencontainers.image.licenses=MIT" \
+            .
+
+      - name: Extract Version and Tag
+        id: tag
+        run: |
+          VERSION=$(docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest --version | tail -n 1 | awk '{print $2}')
+          if [ -z "$VERSION" ]; then
+            echo "Error: Could not determine version from docker image."
+            exit 1
+          fi
+          
+          echo "Detected version: $VERSION"          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Tag Docker image
+        run: |
+            VERSION="${{ steps.tag.outputs.version }}"
+            docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$VERSION
+
+      - name: Push Docker images
+        run: |
+          VERSION="${{ steps.tag.outputs.version }}"
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$VERSION
