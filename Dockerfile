@@ -19,7 +19,8 @@ RUN curl -o hytale-downloader.zip https://downloader.hytale.com/hytale-downloade
     && unzip game.zip -d . \
     && rm game.zip hytale-downloader-linux-amd64 \
     && mv Server/* . \
-    && rm -rf Server
+    && rm -rf Server \
+    && rm hytale-downloader-windows-amd64.exe QUICKSTART.md
 
 # Set working directory for runtime data
 WORKDIR /hytale
