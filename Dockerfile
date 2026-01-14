@@ -1,7 +1,7 @@
-FROM eclipse-temurin:25-jdk
+FROM eclipse-temurin:25-jdk AS downloader
 
 # Install necessary tools
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install --no-install-recommends -y \
     curl \
     unzip \
     && rm -rf /var/lib/apt/lists/*
@@ -21,6 +21,11 @@ RUN curl -o hytale-downloader.zip https://downloader.hytale.com/hytale-downloade
     && mv Server/* . \
     && rm -rf Server \
     && rm hytale-downloader-windows-amd64.exe QUICKSTART.md
+
+FROM eclipse-temurin:25-jdk
+
+# Copy Hytale server files from the builder stage
+COPY --from=downloader /usr/local/hytale /usr/local/hytale
 
 # Set working directory for runtime data
 WORKDIR /hytale
