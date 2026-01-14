@@ -1,6 +1,5 @@
 services:
   hytale-server:
-    build: .
     image: ghcr.io/quantumsheep/hytale-docker:latest
     container_name: hytale_server
     ports:
