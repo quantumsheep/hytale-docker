@@ -5,6 +5,7 @@ services:
     ports:
       - "5520:5520/udp"
     volumes:
+      - /etc/machine-id:/etc/machine-id:ro
       - ./data:/hytale
     restart: unless-stopped
     stdin_open: true

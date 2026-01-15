@@ -7,7 +7,7 @@ This repository contains a Docker setup for running a Hytale Server.
 1. **Start the Server:**
 
     ```bash
-    docker run -d --name hytale_server -p 5520:5520/udp -v./data:/hytale ghcr.io/quantumsheep/hytale-docker:latest
+    docker run -d --name hytale_server -p 5520:5520/udp -v/etc/machine-id:/etc/machine-id:ro -v./data:/hytale ghcr.io/quantumsheep/hytale-docker:latest
     ```
 
     You can also use [`docker-compose`](https://github.com/quantumsheep/hytale-docker/blob/main/docker-compose.yml):

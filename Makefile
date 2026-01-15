@@ -14,3 +14,4 @@ build:
 push: build
 	docker push ghcr.io/quantumsheep/hytale-docker:latest
 	docker push ghcr.io/quantumsheep/hytale-docker:$$(cat /tmp/hytale_version)
+	docker push ghcr.io/quantumsheep/hytale-docker:$$(cat /tmp/hytale_version | cut -d'-' -f1)
