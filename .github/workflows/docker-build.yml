@@ -50,7 +50,7 @@ jobs:
         run: |
             VERSION="${{ steps.tag.outputs.version }}"
             docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$VERSION
-            docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$$(echo $VERSION | cut -d'-' -f1)
+            docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$(echo $VERSION | cut -d'-' -f1)
 
 
       - name: Push Docker images
@@ -58,4 +58,4 @@ jobs:
           VERSION="${{ steps.tag.outputs.version }}"
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$VERSION
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$$(echo $VERSION | cut -d'-' -f1)
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$(echo $VERSION | cut -d'-' -f1)
